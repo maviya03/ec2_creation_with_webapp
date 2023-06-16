@@ -53,11 +53,6 @@
          unarchive:
             src: /var/www/html/simply-amazed.zip
             dest: /var/www/html/
-         register: code
-       - name: show folder name
-         debug:
-            var: code
        - name: move all the data from unzipped directory to document root /var/www/html
-         command: 
-            cmd: mv /var/www/html/2123_simply_amazed/* /var/www/html/
+         shell:  mv /var/www/html/2123_simply_amazed/* /var/www/html/
 
