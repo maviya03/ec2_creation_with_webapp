@@ -46,7 +46,7 @@
            state: present
        - name: start the httpd services on the instance
          service:
-            - name: httpd
+              name: httpd
               enabled: yes
               state: started
        - name: gettting webiste code in document root
