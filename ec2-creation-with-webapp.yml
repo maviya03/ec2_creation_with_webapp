@@ -44,6 +44,11 @@
               - wget
               - unzip
            state: present
+       - name: start the httpd services on the instance
+         service:
+            - name: httpd
+              enabled: yes
+              state: started
        - name: gettting webiste code in document root
          get_url:
             url: https://www.free-css.com/assets/files/free-css-templates/download/page292/simply-amazed.zip
