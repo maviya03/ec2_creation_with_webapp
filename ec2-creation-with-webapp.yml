@@ -1,0 +1,46 @@
+---
+ - name: Creating an ec2 instance with webserver configured
+   hosts: localhost
+   tasks:
+       - name: creating an ec2 instance
+         ec2_instance:
+            aws_access_key: AKIAURVAV3HN4BWEFFLV
+            aws_secret_key: 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
+            region: ap-south-1
+            key_name: ec2
+            instance_type: t2.micro
+            image_id: "ami-008b85aa3ff5c1b02"
+            count: 1
+            security_group: webserver
+            wait: yes
+            wait_timeout: 30
+            name: "web_by_server"
+            network:
+                assign_public_ip: true
+         register: ec2
+       - name: Show instance details
+         debug:
+            var: ec2.instances[0]
+
+       - name: add host name of new instance
+         add_host:
+            name: "{{ ec2.instances[0].public_ip_address }}"
+            ansible_user: ec2-user
+            groups: webserver
+
+       - name: Wait for SSH to be available
+         wait_for:
+            host: "{{ ec2.instances[0].public_ip_address }}"
+            port: 22
+            delay: 30
+ - name: now configure webserver on the instance
+   hosts: webserver
+   gather_facts: no
+   tasks:
+       - name: install required pkg httpd
+         yum:
+           name:
+              - httpd
+              - wget
+              - unzip
+           state: present
