@@ -1,11 +1,32 @@
 ---
  - name: Creating an ec2 instance with webserver configured
    hosts: localhost
+   vars_files:
+       var.yml
    tasks:
+       - name: Creating Security Group for WebServer on AWS
+         ec2_group:
+            name: WebSG
+            description: Security Group for Web Server allowing port for http and ssh
+            region: ap-south-1
+            aws_access_key: "{{ access_key }}"
+            aws_secret_key: "{{ secret_key }}"
+            rules:
+               - proto: tcp
+                 from_port: 22
+                 to_port: 22
+                 cidr_ip: 0.0.0.0/0
+               - proto: tcp
+                 from_port: 80
+                 to_port: 80
+                 cidr_ip: 0.0.0.0/0
+            rules_egress:
+               - proto: all
+                 cidr_ip: 0.0.0.0/0
        - name: creating an ec2 instance
          ec2_instance:
-            aws_access_key: AKIAURVAV3HN4BWEFFLV
-            aws_secret_key: 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
+            aws_access_key: "{{ access_key }}"
+            aws_secret_key: "{{ secret_key }}"
             region: ap-south-1
             key_name: ec2
             instance_type: t2.micro
