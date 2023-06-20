@@ -45,7 +45,6 @@
 
        - name: Wait for public_ip_address to be available
          wait_for:
-            host: "{{ ec2.instances[0].public_ip_address }}"
             delay: 120
        - name: add host name of new instance
          add_host:
