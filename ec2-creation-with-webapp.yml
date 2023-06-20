@@ -32,20 +32,21 @@
             instance_type: t2.micro
             image_id: "ami-008b85aa3ff5c1b02"
             count: 1
-            security_group: webserver
+            security_group: WebSG
             wait: yes
             wait_timeout: 30
             name: "web_by_server"
             network:
                 assign_public_ip: true
          register: ec2
+       - name: Wait for public_ip_address to be available
+         wait_for:
+            timeout: 60
+       
        - name: Show instance details
          debug:
             var: ec2.instances[0]
 
-       - name: Wait for public_ip_address to be available
-         wait_for:
-            delay: 120
        - name: add host name of new instance
          add_host:
             name: "{{ ec2.instances[0].public_ip_address }}"
